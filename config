@@ -1,0 +1,50 @@
+# Version
+LIB_VERSION= 2.0.4
+
+# Installation directories: Adjust these for your distro and Lua version
+# Prefix for installation
+PREFIX= /usr/local
+# Spamfilter install dir
+SPAMFILTER_DIR= $(PREFIX)/osbf-lua
+
+# Lua's library dir:
+LUA_LIBDIR= /usr/local/lib/lua/5.1
+# Lua's include dir
+LUA_INCDIR= /usr/local/include
+
+# System's include dir (where include files are installed)
+INC_DIR= /usr/local/include
+# System's library dir (where binary libraries are installed)
+LIB_DIR= /usr/local/lib
+
+# OS dependent
+LIB_EXT= .so
+
+# if this "autoconf" doesn't work for you, set LIB_OPTION for shared
+# object manually.
+LD=$(shell ld -V -o /dev/null 2>&1)
+ifneq (,$(findstring Solaris,$(LD)))
+ # Solaris - tested with 2.6, gcc 2.95.3 20010315 and Solaris ld
+ LIB_OPTION= -G -dy
+else
+ ifneq (,$(findstring GNU,$(LD)))
+  # GNU ld
+  LIB_OPTION= -shared -dy
+ else
+  $(error couldn't identify your ld. Please set the shared option manually)
+ endif
+endif
+
+# Choose the PIC option
+# safest, works on most systems
+PIC=-fPIC
+# probably faster, but may not work on your system
+#PIC=-fpic
+
+# Compilation directives
+OPTIONS= -O3 -Wall ${PIC} -fomit-frame-pointer -pedantic-errors -W -Waggregate-return -Wcast-align -Wmissing-prototypes -Wnested-externs -Wshadow -Wwrite-strings
+INCS= -I$(INC_DIR) -I$(LUA_INCDIR)
+LIBS= -L$(LIB_DIR) -L$(LUA_LIBDIR) -lm
+CFLAGS= $(OPTIONS) $(INCS) -DLIB_VERSION=\"$(LIB_VERSION)\"
+CC= gcc
+

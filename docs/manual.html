@@ -1,0 +1,2772 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+
+
+
+
+
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <title>OSBF-Lua</title>
+  <meta name="GENERATOR" content="OpenOffice.org 2.0 (Linux)">
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta name="CREATED" content="20050304;23093600">
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta name="CHANGEDBY" content="Fidelis Assis">
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta name="CHANGED" content="20060716;15581200">
+</head>
+
+
+<body style="direction: ltr; background-color: rgb(255, 255, 255);" lang="pt-BR">
+
+
+
+
+
+
+<center>
+<table style="page-break-before: always;" border="0" cellpadding="2" cellspacing="0" width="100%">
+
+
+
+
+
+
+  <col width="256*"> <tbody>
+
+
+
+
+
+
+    <tr>
+
+
+
+
+
+
+      <td width="100%"></td>
+
+
+
+
+
+
+    </tr>
+
+
+
+
+
+
+    <tr>
+
+
+
+
+
+
+      <td width="100%">
+      
+      
+      
+      
+      
+      <p align="center"><font size="5"><b>OSBF-Lua
+Reference Manual</b> </font> </p>
+
+
+
+
+
+
+      </td>
+
+
+
+
+
+
+    </tr>
+
+
+
+
+
+
+    <tr>
+
+
+
+
+
+
+      <td valign="top" width="100%">
+      
+      
+      
+      
+      
+      <p align="center">Text classification module for the
+      <a href="http://www.lua.org/">Lua</a>
+programming language </p>
+
+
+
+
+
+
+      </td>
+
+
+
+
+
+
+    </tr>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  </tbody>
+</table>
+
+
+
+
+
+
+</center>
+
+
+
+
+
+
+<p align="center"><a href="index.html">home</a>
+<font style="font-size: 16pt;" size="4"><small>&middot;
+</small></font><a href="#introduction">introduction</a>
+<font style="font-size: 16pt;" size="4"><small>&middot;
+</small></font><a href="#reference">reference</a>
+<font style="font-size: 16pt;" size="4"><small>&middot;
+</small></font><a href="#examples">examples</a>
+</p>
+
+
+
+
+
+
+<hr>
+<h3><a name="introduction"></a>I<span lang="en-US">ntroduction</span></h3>
+
+
+
+
+
+
+<p>OSBF-Lua
+(<b>O</b>rthogonal <b>S</b>parse <b>B</b>igrams
+with confidence
+<b>F</b>actor) is a <a href="http://www.lua.org/"><span lang="en-US">Lua</span></a>
+<span lang="en-US">C module for text
+classification. It is a port of the OSBF classifier implemented in
+the </span><a href="http://crm114.sourceforge.net/"><span lang="en-US">CRM114</span></a>
+project. This
+implementation attempts to put focus on the classification task
+itself by using Lua as the scripting language, a powerful yet
+light-weight and fast language, which makes it easier to build and
+test more elaborated filters and training methods.</p>
+
+
+
+
+
+
+<p>OSBF-Lua
+is free software and is released under the GPL version 2. You can get
+a copy of the license at <a href="http://www.fsf.org/licensing/licenses/gpl.txt"><span lang="en-US">GPL</span></a>.
+This distribution includes a copy of the license in the file
+gpl.txt.<br>
+
+
+
+
+
+
+<font face="Bitstream Vera Sans, sans-serif"><br>
+
+
+
+
+
+
+</font></p>
+
+
+
+
+
+
+<h3><a name="reference"></a>Reference</h3>
+
+
+
+
+
+
+<p lang="en-US">OSBF-Lua
+offers the following functions:<font size="4"> </font>
+</p>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="create_db"></a><b><span lang="en-US"></span></b><b><span lang="en-US"></span></b><b>osbf.create_db(classes,
+num_buckets)</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Creates the single
+class databases specified in the table classes<span lang="en-US">,
+with </span>num_buckets buckets each. </p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><b>osbf.create</b>
+returns the number of single class databases created or <span style="font-style: italic;">nil</span> plus an error
+message. <small><span style="font-family: monospace;"></span></small></p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><tt><span lang="en-US"><font size="4">Ex:
+osbf.create_db({"nonspam.cfc", "spam.cfc"}, 94321)<br>
+
+
+
+
+
+
+  <br>
+
+
+
+
+
+
+  </font></span></tt></p>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="remove_db"></a><b>osbf.remove_db
+(classes)<br>
+
+
+
+
+
+
+    </b><br>
+
+
+
+
+
+
+Removes all single class databases specified in the table <span style="font-style: italic;">classes</span>. <span style="font-style: italic;">classes</span><span style="font-family: Bitstream Vera Sans,sans-serif;"> </span>is
+the same as in <span style="font-style: italic;">osbf.create_db</span><span lang="en-US"><font size="4"><small><font face="Bitstream Vera Sans, sans-serif">.</font></small></font></span></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><span style="font-style: italic;">osbf.remove_db</span>
+returns<font size="4"><small><span style="font-family: monospace;"> </span></small></font><span style="font-style: italic;">true</span> in case of
+success or <span style="font-style: italic;">nil</span>
+plus an error message.</p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Ex: <big><span style="font-family: monospace;">osbf.remove_db({"nonspam.cfc",
+"spam.cfc"})<br>
+
+
+
+
+
+
+    </span></big><font size="4"><br>
+
+
+
+
+
+
+    </font></p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p><a name="classify"></a><b>osbf.classify(text,
+dbset, flags, min_p_ratio)<br>
+
+
+
+
+
+
+    </b><br>
+
+
+
+
+
+
+Classifies the string text.<small><span lang="en-US"><font size="4"><small><font face="Bitstream Vera Sans, sans-serif"> </font></small></font></span></small>
+    </p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<p style="margin-left: 1.27cm; margin-bottom: 0cm;" lang="en-US"><b>text</b>:
+String with the text to be classified;</p>
+
+
+
+
+
+
+<p style="margin-left: 1.27cm; margin-bottom: 0cm;" lang="en-US"><b>dbset</b>:
+Lua table with the following structure: </p>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <code>&nbsp;&nbsp;&nbsp; dbset = {<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; classes =
+{"nonspam.cfc", "spam.cfc"},<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ncfs = 1,<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+delimiters = "" -- you can put additional token delimiters here<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; }</code>
+  
+  
+  
+  
+  
+  <p> <span style="font-weight: bold;">classes</span>:&nbsp;classes&nbsp;for
+classification.</p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p><b>ncfs</b>:&nbsp;split classes in 2
+subsets. The first subset is formed by the first ncfs class databases.
+The remainder databases will form the second subset. These 2 subsets
+define 2 composed classes. In the above example we have 2 composed
+classes formed by a single class database each. Another possibility,
+for instance, would be 2 composed classes formed by a pair of single
+class databases each: global and per user. Ex: </p>
+
+
+
+
+
+
+  <code>&nbsp;&nbsp;&nbsp; dbset = {<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; classes =
+{"globalnonspam.cfc", "usernonspam.cfc", "globalspam.cfc",
+"userspam.cfc"},<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ncfs = 2,
+-- 2 single classes in the first subset<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+delimiters = ""<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; }</code>
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"> <b>flags</b>:
+Number with the classification control flags. Each bit is a flag. The
+available flags are:<br>
+
+
+
+
+
+
+  </p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <ul>
+
+
+
+
+
+
+    <li>NO_EDDC = 1 &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; -
+disable EDDC; </li>
+
+
+
+
+
+
+    <li>COUNT_CLASSIFICATIONS = 2 &nbsp; &nbsp; - turn on
+the classification counter;<br>
+
+
+
+
+
+
+      <br>
+
+
+
+
+
+
+The NO_EDDC flag is more intended for tests because disabling it
+normally lowers accuracy. </li>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  </ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>min_p_ratio</b>:
+Number with the minimum feature probability ratio. The probability
+ratio of a feature is the ratio between the maximum and the minimum
+probabilities it has over the classes. Features with less than
+min_p_ratio are not considered for classification. This parameter is
+optional. The default is 1, which means that all features are
+considered.<br>
+
+
+
+
+
+
+  <br>
+
+
+
+
+
+
+  <b>delimiters</b>: String with extra token delimiters.
+The tokens are produced by the internal fixed pattern ([[:graph:]]+),
+or, in other words, by sequences of printable chars except tab, new
+line, vertical tab, form feed, carriage return, or space. If delimiters
+is not empty, its chars will be considered as extra token delimiters,
+like space, tab, new line, etc.<br>
+
+
+
+
+
+
+  <br>
+
+
+
+
+
+
+  </p>
+
+
+
+
+
+
+  <span style="font-style: italic;">osbf.classify</span> returns 4 values, in the following
+order:
+  
+  
+  
+  
+  
+  <ul>
+
+
+
+
+
+
+    <li>
+      
+      
+      
+      
+      
+      <p style="margin-bottom: 0cm;">pR: The log of the
+ratio between the probabilities of the first and second subset;</p>
+
+
+
+
+
+
+    </li>
+
+
+
+
+
+
+    <li>
+      
+      
+      
+      
+      
+      <p style="margin-bottom: 0cm;">p_array: a Lua array
+with each single class probability;</p>
+
+
+
+
+
+
+    </li>
+
+
+
+
+
+
+    <li>
+      
+      
+      
+      
+      
+      <p style="margin-bottom: 0cm;"><span lang="en-US"></span>&nbsp;i_pmax:
+index of the array to the single class with maximum probability;<br>
+
+
+
+
+
+
+      <br>
+
+
+
+
+
+
+      </p>
+
+
+
+
+
+
+    </li>
+
+
+
+
+
+
+    <li>trainings: a Lua array with the number of trainings for
+each class;</li>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  </ul>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<div style="margin-left: 40px;">In case of error, it
+returns 2 values: <span style="font-style: italic;">nil
+</span>and an error message.<br>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<span lang="en-US"></span> <span lang="en-US"><font size="4"><small><br>
+
+
+
+
+
+
+</small></font></span>
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="learn"></a><b>osbf.learn
+(text, dbset, class_index, flags)</b><br>
+
+
+
+
+
+
+    <span lang="en-US"><font size="4"><font face="Bitstream Vera Sans, sans-serif"><br>
+
+
+
+
+
+
+    </font></font></span>Learns the string text as
+belonging to the single class database indicated by the number
+class_index in dbset.classes.<br>
+
+
+
+
+
+
+    <font size="-1"><br>
+
+
+
+
+
+
+    </font><b>text</b>: string with the text to be
+learned;<br>
+
+
+
+
+
+
+    </p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<p style="margin-bottom: 0cm;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;<b>dbset</b>: table with the
+classes. Same structure as in <span style="font-style: italic;">osbf.classify</span>;<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+</p>
+
+
+
+
+
+
+<b>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; class_index</b>:
+index to the single class, in db.classes, to be trained with text;
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p><b>flags</b>: Number with the flags to control
+the learning operation. <span lang="en-US">Each bit is a
+flag. T</span>he available flags are:</p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <ul>
+
+
+
+
+
+
+    <li>
+      
+      
+      
+      
+      
+      <p>NO_MICROGROOM = 1&nbsp;&nbsp;&nbsp; -
+disable microgrooming;</p>
+
+
+
+
+
+
+    </li>
+
+
+
+
+
+
+    <li>
+      
+      
+      
+      
+      
+      <p>MISTAKE = 2 &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;- increment the
+mistake counter, besides the learning counter;</p>
+
+
+
+
+
+
+    </li>
+
+
+
+
+
+
+    <li>
+      
+      
+      
+      
+      
+      <p>EXTRA_LEARNING = 4&nbsp;&nbsp;&nbsp; -
+increment the extra-learning, or reinforcement, counter, besides the
+learning counter;</p>
+
+
+
+
+
+
+      
+      
+      
+      
+      
+      <p><span lang="en-US"></span>The
+NO_MICROGROOM flag is more intended for tests because the databases
+have fixed size and the pruning mechanism is necessary to guarantee
+space for new learnings. The MISTAKE and the EXTRA_LEARNING flags
+shouldn't be used simultaneously.</p>
+
+
+
+
+
+
+    </li>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  </ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><span style="font-style: italic;">osbf.learn</span> returns <i>true</i>
+in case of success or <span style="font-style: italic;">nil</span>
+plus an error message in case of error.</p>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<p style="margin-bottom: 0cm;"><br>
+
+
+
+
+
+
+</p>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="learn1"></a><b>osbf.config
+(options)</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Configures internal
+parameters. This function is intended more for test purposes.</p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><b>options: </b>table
+whose keys are the options to be set to their respective values.</p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><br>
+
+
+
+
+
+
+The available options are:</p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <ul>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>max_chain</i>:
+the max number of buckets allowed in a database chain. From that size
+on, the chain is pruned before inserting a new bucket;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>stop_after</i>:
+max number of buckets pruned in a chain;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>K1, K2, K3</i>:
+Constants used in the EDDC formula;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>limit_token_size:</i>
+limit token size to <i>max_token_size, </i>if not equal
+to 0. The default value is 0;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>max_token_size:</i>
+maximum number of chars in a token. The default is 60. This limit is
+observed if <i>limit_token_size</i> is different from 0;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>max_long_tokens:</i>
+sequences with more than <i>max_long_tokens </i>tokens
+where the&nbsp;tokens are greater than&nbsp;<i>max_token_size</i>
+are collapsed into a single hash, as if they were a single token. This
+is&nbsp;to reduce database pollution with the many "tokens" found
+in encoded attachments.</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    </ul>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Return the number of
+options set.</p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;">Ex: <code>osbf.config({max_chain
+= 50, stop_after = 100})</code></p>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<p style="margin-bottom: 0cm;"><br>
+
+
+
+
+
+
+</p>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="stats"></a><b>osbf.stats
+(dbfile [, full])<br>
+
+
+
+
+
+
+    </b><br>
+
+
+
+
+
+
+Returns a table with information and statistics of the specified
+database. The keys of the table are:</p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <ul>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>version</i>
+- version of the module;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>buckets</i>
+&ndash; total number of buckets in the database;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>bucket_size</i>
+- size of the bucket, in bytes;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>header_size</i>
+- size of the header, in buckets;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>learnings</i>
+- number of learnings;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>extra_learnings</i>
+- number of extra learnings done internally when a single learning is not enough;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>classifications</i>
+&ndash; number of classifications;<br>
+
+
+
+        <br>
+
+
+
+
+        </p>
+
+
+
+
+      </li>
+
+
+
+
+      <li><span style="font-style: italic;">mistakes</span> - number of learnings done because of&nbsp;misclassifications;</li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>chains</i>
+&ndash; number of bucket chains;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>max_chain</i>
+&ndash; length of the max chain;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>avg_chain</i>
+&ndash; average length of a chain;</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>max_displacement</i>
+&ndash; max distance a bucket is from the
+&ldquo;right&rdquo; place</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>used_buckets</i>
+&ndash; number of used buckets</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+      <li>
+        
+        
+        
+        
+        
+        <p style="margin-bottom: 0cm;"><i>use</i>
+&ndash; percentage of used buckets</p>
+
+
+
+
+
+
+      </li>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    </ul>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><b>dbfile</b>:
+string with the database filename.<br>
+
+
+
+
+    <span style="font-weight: bold;">full:</span> optional boolean argument. If present and equal to <span style="font-style: italic;">false</span>&nbsp;only the values already in the header of the database are returned, that is, the values for the keys <i>version, </i><i>buckets</i>, <i>bucket_size, </i><i>header_size</i><i>, </i><i>learnings</i><i>, </i><i>extra_learnings,</i><span style="font-style: italic;"> </span><i>classifications</i> and <span style="font-style: italic;">mistakes</span>.<i>&nbsp;</i>If <span style="font-weight: bold;">full</span> is equal to&nbsp;<span style="font-style: italic;">true</span>, or not given,&nbsp;the complete statistics is returned. For large databases, <span style="font-weight: bold;">osbf.stats</span> is much faster when <span style="font-weight: bold;">full</span> is equal to <span style="font-style: italic;">false</span>.</p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">In case of error, it
+returns <span style="font-style: italic;">nil</span>
+plus an error message.<br>
+
+
+
+
+
+
+    <br>
+
+
+
+
+
+
+    </p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="dump"></a><b>osbf.dump
+(dbfile, csvfile)</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Creates csvfile, a dump
+of dbfile in CSV format. Its main use is to transport dbfiles between
+different architectures (Intel x Sparc for instance). A dbfile in CSV
+format can be restored in another architecture using the osbf.restore
+function below.</p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>dbfile</b>:
+string with the database filename.</p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>csvfile</b>:
+  <font face="Bitstream Vera Sans, sans-serif">string with
+the csv filename.</font></p>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;">In case of error, it
+returns <span style="font-style: italic;">nil</span>
+  <font face="Bitstream Vera Sans, sans-serif">plus an
+error message.<br>
+
+
+
+
+
+
+  <br>
+
+
+
+
+
+
+  </font></p>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="restore"></a><b>osbf.restore
+(dbfile, csvfile)</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Restores dbfile from
+cvsfile. Be careful, if dbfile exists it'll be rewritten. Its main use
+is to restore a dbfile in CVS format dumped in a different architecture.</p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>dbfile</b>:
+string with the database filename.</p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>csvfile</b>:
+  <font face="Bitstream Vera Sans, sans-serif">string with
+the csv filename</font></p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;">In case of error, it
+returns <span style="font-style: italic;">nil</span>
+plus an error message.<br>
+
+
+
+
+
+
+  <br>
+
+
+
+
+
+
+  </p>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="import"></a><b>osbf.import
+(to_dbfile, from_dbfile)</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Imports the buckets in <span style="font-style: italic;">from_dbfile</span> into
+to_dbfile. from_dbfile must exist. Buckets originally present in
+to_dbfile will be preserved as long as the microgroomer doesn't delete
+them to make room for the new ones. The counters (learnings,
+classifications, mistakes, etc), in the destination database will be
+incremented by the respective values in the origin database. The main
+purpose of this function is to expand or shrink a database, importing
+into a larger or smaller empty one.</p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>to_dbfile</b>:
+string with the database filename.</p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><b>from_dbfile</b>:
+string with the database filename</p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;">In case of error, it
+returns <span style="font-style: italic;">nil</span>
+plus an error message.<br>
+
+
+
+
+
+
+  <br>
+
+
+
+
+
+
+  </p>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="chdir"></a><b>osbf.chdir
+(dir)</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><tt><span lang="en-US"><font size="4"><font face="Bitstream Vera Sans, sans-serif">Change the current
+working dir to <b>dir</b>.</font></font></span></tt></p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><tt><span lang="en-US"><font size="4"><font face="Bitstream Vera Sans, sans-serif"><b>dir</b>:</font><tt><font face="Bitstream Vera Sans, sans-serif"> string with the
+database filename.</font></tt></font></span></tt></p>
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <p style="margin-bottom: 0cm;"><tt><tt><span lang="en-US"><font size="4"><font face="Bitstream Vera Sans, sans-serif"><span style="">In
+case of error, it returns </span><code><span style="">nil</span></code><span style=""> plus an error message.<br>
+
+
+
+
+
+
+  <span lang="en-US"><font size="4"><font face="Bitstream Vera Sans, sans-serif"><br>
+
+
+
+
+
+
+  </font></font></span></span></font></font></span></tt></tt></p>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<ul>
+
+
+
+
+
+
+  <li>
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;"><a name="getdir"></a><b>osbf.getdir
+()</b></p>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    <p style="margin-bottom: 0cm;">Returns the current
+working dir. In case of error, it returns <span style="font-style: italic;">nil</span> plus an error
+message.<br>
+
+
+
+
+
+    <br>
+
+
+
+
+
+
+    </p>
+
+
+
+
+
+
+  </li>
+
+
+
+
+
+
+  <li><a name="dir"><b>osbf.dir (dir)<br>
+
+
+
+
+
+
+    <br>
+
+
+
+
+
+
+    </b>Returns a Lua iterator that returns a new entry, in the
+directory passed as its argument, each time it's called. The example
+below will print all entries in the current dir:<br>
+
+
+
+
+
+
+    <br>
+
+
+
+
+
+
+    <span style="font-family: monospace;">for f in
+osbf.dir(".") do print(f) end</span><br>
+
+
+
+
+
+
+    </a></li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+<h3><a name="examples"></a><b>Examples</b></h3>
+
+
+
+
+
+
+<code>------------------------------------------------------------------<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+--&nbsp;create_databases.lua: Script for creating the
+databases<br>
+
+<br>
+
+require "osbf"</code><code><font style="font-family: Courier New,Courier,monospace;" face="Bitstream Vera Sans, sans-serif"><font size="4"><small><small><br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+</small></small></font></font>
+-- class databases to be created<br>
+
+
+
+
+
+
+dbset = { classes = {"nonspam.cfc", "spam.cfc"} }<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+-- number of buckets in each database<br>
+
+
+
+
+
+
+num_buckets = 94321<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+-- remove previous databases with the same name<br>
+
+
+
+
+
+
+osbf.remove_db(dbset.classes)<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+-- create new, empty databases<br>
+
+
+
+
+
+
+osbf.create_db(dbset.classes, num_buckets)<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+------------------------------------------------------------------<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+-- classify.lua: Script for classifying a message read from stdin<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+require "osbf"<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+dbset = {<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; classes = {"nonspam.cfc", "spam.cfc"},<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; ncfs = 1,<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; delimiters = ""<br>
+
+
+
+
+
+
+}<br>
+
+
+
+
+
+
+classify_flags = 0<br>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+-- read entire message into var "text"<br>
+
+
+
+
+
+
+text = io.read("*all")<br>
+
+
+
+
+
+
+pR, p_array, i_pmax = osbf.classify(text, dbset, classify_flags)<br>
+
+
+
+
+
+
+if (pR == nil) then<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;
+print(p_array)&nbsp;&nbsp;&nbsp; -- in case of error,
+p_array contains<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;--&nbsp;the error
+message<br>
+
+
+
+
+
+
+else<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; io.write(string.format("The message
+score is %f - ", pR))<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; if (pR &gt;= 0) then<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+io.write("HAM\n")<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; else<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+io.write("SPAM\n")<br>
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; end<br>
+
+
+
+
+
+
+end<br>
+
+
+
+
+
+
+------------------------------------------------------------------<br>
+
+
+
+
+
+
+</code> <br>
+
+
+
+
+
+
+See more examples of the use of the osbf module in the spamfilter dir.
+In special, take a look at the script <i>toer.lua</i>,
+which is a very fast way of preparing your databases using a previously
+classified corpora.
+<pre><br></pre>
+
+
+
+
+
+
+<p align="center">
+<a href="index.html">home</a>
+<span lang="en-US">&middot; </span><a href="#introduction">introduction</a><span lang="en-US">&middot;
+</span><a href="#reference">reference</a>
+<span lang="en-US">&middot; </span><a href="#examples">examples</a>
+</p>
+
+
+
+
+
+
+</body>
+</html>

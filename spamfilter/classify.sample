@@ -1,0 +1,33 @@
+#!/usr/local/bin/lua
+-- Sample script for classifying a message read from stdin
+
+require "osbf"
+
+-- Set the path to where your databases are.
+db_path="./"
+nonspamdb = db_path .. "nonspam.cfc"
+spamdb    = db_path .. "spam.cfc"
+ 
+dbset = {
+          classes = {nonspamdb, spamdb},
+          ncfs = 1,
+          delimiters = ""
+}
+classify_flags = 0
+
+-- read the entire message into var "text"
+text = io.read("*all")
+
+pR, p_array, i_pmax = osbf.classify(text, dbset, classify_flags)
+
+if (pR == nil) then
+   print(p_array)  -- in case of error, p_array contains the error message
+else
+   io.write(string.format("Score: %f - ", pR))
+   if (pR >= 0) then
+     io.write("HAM\n")
+   else
+     io.write("SPAM\n")
+   end
+end
+

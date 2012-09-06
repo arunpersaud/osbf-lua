@@ -1,0 +1,38 @@
+#!/usr/local/bin/lua
+-- Sample script for learning a message from stdin
+
+require "osbf"
+
+-- Change the path if you installed getopt.lua in another place
+dofile("/usr/local/osbf-lua/getopt.lua")
+
+-- Set the path to where your databases are.
+db_path="./"
+nonspamdb = db_path .. "nonspam.cfc"
+spamdb    = db_path .. "spam.cfc"
+
+local optind, options = getopt(arg, { spam = 0, nonspam = 0, undo = 0})
+
+if options["nonspam"] then
+  db_index = 1
+elseif options["spam"] then
+  db_index = 2
+else
+  print("Syntax: train --nonspam|--spam  [--undo]")
+  return 1
+end
+
+dbset = {
+          classes = {nonspamdb, spamdb},
+          ncfs = 1,
+          delimiters = ""
+}
+learn_flags = 0
+
+-- learn from stdin
+if options["undo"] then
+  assert(osbf.unlearn(io.read("*all"), dbset, db_index, learn_flags))
+else
+  assert(osbf.learn(io.read("*all"), dbset, db_index, learn_flags))
+end
+

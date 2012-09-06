@@ -1,0 +1,285 @@
+[14/Jan/2007 Version 2.0.4
+o Changes to osbf module
+  - Removed unnecessary linking of liblua.a, which caused segfaults on
+    IRIX 6.5.30. This fix also reduced the size of the module by a
+    factor of 5 or more. Problem detected and fixed by Holger Weiss.
+  - Fixed the number of args returned by osbf.classify in case of error.
+
+o Changes to spamfilter.lua - version 2.0.3
+  - Added --help option;
+  - Extended syntax to read from file passed as arg in command line.
+    If no file is given it uses standard input, as usual;
+  - Better error handling;
+  - Fixed optind in getopt.lua.
+
+o Fixed a date parsing error in cache_report.lua, caused mainly by
+  ill-formed date fields in spam messages;
+ 
+o The scripts classify.lua and train.lua were renamed to classify.sample
+  and train.sample, because they are meant more as samples, starting
+  points for customized scripts, than for real use. spamfilter.lua should
+  be used for real classifications and trainings.
+
+o Added the file COPYRIGHT_AGREEMENT which states the dual-license
+  agreement between Fidelis Assis and William Yerazunis.
+
+[17/Nov/2006] Version 2.0.3
+o When a SFID is not found in the cache it's now added to the report
+  message, for reference purposes;
+o New config option, osbf.cfg_mail_cmd, to specify the mail command used by
+  the spamfilter;
+o Fixes and improvements to cache_report.lua;
+o Minor fixes and improvements to spamfilter.lua and spamfilter_commands.lua;
+o More flexible config.
+
+[15/Oct/2006] Version 2.0.2
+o Added a new script, cache_report.lua. It sends an email with an HTML form
+  that makes training really easy. The form is an HTML table with Date, From,
+  Subject and a drop down menu with the possible actions: Train as spam,
+  Train as non-spam, Add 'From:' to whitelist, etc. This training mechanism
+  requires the new OSBF module v2.0.2 and that the email client supports HTML
+  messages with "mailto" form action. It works fine with Mozilla Thunderbird
+  and Microsoft Outlook but was not tested with other clients. This script is
+  tipically launched from a cron job. Read the text at the top of the script
+  to know how to use.
+
+o Changes to osbf module
+  - Added the function osbf.dir, a directory iteractor presented in the PIL
+    book, to support the new training mechanism mentioned above;
+  - Replaced the call to luaL_opendir with the new luaL_register;
+  - osbf.create_db and osbf.remove_db now check if the first arg is a table
+    and osbf.create_db returns an error if the file already exists;
+  - osbf.classify now returns an additional value which is a Lua table with
+    the number of trainings for each class. See the manual for details;
+  - Added an optional second argument to osbf.stats to specify full
+    (default) or fast statistics.
+  - Fixes to white and blacklist handling;
+  - Added PREFIX to makefile config, for easier local installation - patch
+    sent by Christian Siefkes.
+
+o Changes to spamfilter.lua - version 2.0
+  - New subject-line command: batch_train <pwd>. This command allows training
+    in bach, that is, many sfids can be sent in the body of the message, along
+    with the right class. Ex:
+
+      sfid-+20060924-215225-+005.65-1@spamfilter.osbf.lua=spam
+      sfid-+20060924-215238-+001.53-1@spamfilter.osbf.lua=nonspam
+      ...
+
+    It can be used manually but its main purpose is to allow the new
+    semi-automated batch training mechanism used by cache_report.lua.
+  - New subject-line command train_form <password>. This command executes the
+    script cache_report.lua which sends a mail with a training form to the
+    user.
+
+  - Improved handling of white and blacklists.
+
+o Minor fixes to the docs.
+
+[02/Sep/2006] Version 2.0.1
+o This version incorporates all changes in version 2.0;
+o Changes to the osbf module:
+  - Changed the function osbf.import to read from a .cfc file instead of from
+    a .csv one;
+o Improvements and fixes to spamfilter.lua:
+  - Changed the tags [s] and [h], in the X-OSBF-Lua-Score header to  [-] and
+    [+], respectively, because some email client filters are case insensitive
+    and can't distinguish between [s] and [S]. This is useful for those who
+    prefer not to tag subject lines and filter using the information in the
+    X-OSBF-Lua-Score header;
+  - Fixed a bug that caused messages with score below
+    osbf.cfg_remove_body_threshold to have their bodies removed even when
+    whitelisted;
+  - Added a new command-line option, --source = <message_source>, to specify
+    the source of the message to be used for training. The possible values
+    for <message_source> are:
+    + stdin - the message is read directly from stdin. This is the default.
+    + sfid  - the message is recovered from the cache, using the sfid present
+              in the header of the message read from stdin. The message read
+              from stdin must have been classified previously, in order to
+              have a sfid in the header.
+    + body  - the message to be trained with is the body of the message read
+              from stdin.
+    These options are valid only in conjunction with one of the commands
+    --learn or --unlearn. 
+  - Added a new command-line option, --output, to determine what is written
+    to stdout after training a message (suggested by Steve Pellegrin): 
+    --output=report  => a report message is sent to stdout. This is the
+			default action.
+    --output=message => the original message, classified as spam or ham,
+			according to the the training command, is written
+			to stdout.
+  - New config option, osbf.cfg_insert_sfid_in, to define where the sfid
+    will be inserted;
+  - Now, trained messages have their cached name changed to reflect the new
+    state: learned as spam or learned as ham. The changed names can be used
+    for automatic retraining or for rebuilding the databases. The change in
+    name also prevents training a message more than once or unlearning a
+    message that was not learned before;
+  - Fixed a bug in the error handling of invalid command-line options;
+  - There's a new config option, osbf.cfg_insert_sfid_in, to determine where
+    the SFID will be inserted when an incoming message is classified:
+    "references", "message-id" or "both". The default is now to insert in
+    both, References and Message-ID headers, because some email clients
+    don't follow RFC2822 strictly and reinsert only one of them in a reply;
+  - Old SFIDs are now removed when an incoming message is classified, right
+    before the new one is inserted.
+o Updated the training method in toer.lua to the same one introduced in
+  spamfilter.lua version 2.0. As of this version, toer.lua uses the
+  TREC format for both corpora and result files.
+
+[11/Feb/2006] Version 2.0
+o This version was used for TREC 2006 tests only and was not released;
+o Improvements and fixes to the osbf module
+  - Adjustments to the EDDC formula and better tuning of the intrinsic
+    OSB-bigram weights for improved AUC;
+  - Added specific counters for classification, mistake and extra
+    learning, besides the existing learning counter.
+  - Bug fixes;
+o Improvements and fixes to spamfilter
+  - New training method, a variant of TOER (see toer.lua), where extra
+    trainings using exclusively the header are done if the first one, with
+    the full message, was not enough to change the score to an acceptable
+    value. In many tests, with different corpora, this new method resulted
+    in improved Area Under the ROC Curve (AUC);
+  - The messages cached for later training are now saved under the directory
+    "cache", parallel to the previous "log". You must create the directory
+    "cache" before using the filter;
+  - New option for caching the messages in a subdir structure formed by
+    "DD/HH", under the cache dir, to avoid excessive messages per directory;
+  - Added accuracy statistics to the stats command, based on the new counters;
+  - The DSTTT method is not used any more;
+  - Added many command line options - check the file spamfilter.help;
+  - Bug fixes.
+
+OBS: Versions after 1.5.6b and before 2.0.1 were experimental and not
+     released.
+
+[20/Feb/2006] Version 1.5.6b
+o Added a new option to osbf.config: limit_token_size, which toggles
+  token size limitation on when different from 0. The default value
+   is 0 and restores the traditional behavior broken in 1.5.5b;
+o Fixed a bad collateral effect in get_next_hash introduced in v1.5.5b
+  - long sequences of long tokens were not being collapsed any more;
+
+[19/Feb/2006] Version 1.5.5b
+o Fixed a memory leak in osbf.classify;
+o Two new options to osbf.config: max_token_size and max_long_tokens.
+  For testing and special tuning purposes;
+o Added train.lua a script for training from stdin;
+o Added getopt.lua a lua function useful for handling command line
+  arguments, similar to the C getopt_long;
+o Minor change to toer.lua, now it stops without an error message if
+  there are less index files than what is expected in the for loop.
+  It prints an error message if none is found, though.
+
+[21/Jan/2006] Version 1.5.4b
+o Now we have that nice logo at the top, sent by Alessandro Martins
+  <alessandro@martins.eng.br>;
+o Added a new function to the osbf module: osbf.import("file.cfc",
+  "file.csv"). This function is similar to osbf.restore but, contray to
+  that, file.cfc must already exist before the importing and, instead of
+  restoring the original .cfc, the buckets in file .csv will be imported
+  into the existing file .cfc, which can have more or lessi buckets than
+  the original .cfc. Its main use is to create a larger database from an
+  older and full one, preserving the contents.
+o Better separation of lib and bind codes, what will make it easier to
+  adapt the module to other languages;
+o Doc files moved to the new docs dir.
+
+[08/Jan/2006] Version 1.5.3b
+o Fixes to the osbf module
+o Fixed the database restore function - osbf.restore;
+o Changed the osbf.so link from absolute to relative to make it simpler
+  to generate the Slackware package - suggested by Alessandro Martins
+  <alessandro@martins.eng.br>.
+o Improvements and fixes to spamfilter (v1.1.3):
+  - Better detection of the "Subject:" header line;
+  - Improved scan for a command in the subject line. Now it'll detect a
+    command even if another filter in the middle has mistakenly added a
+    tag to the beginning of the subject line. Problem pointed out by
+    Pavel Kolar.
+
+[01/Jan/2006] Version 1.5.2b
+o Improvements and fixes to spamfilter:
+  - The recover command now sends the recovered message as an attachment;
+  - Added a new config option, osbf.cfg_remove_body_threshold, to remove
+    the body of spam messages. Setting osbf.cfg_remove_body_threshold = 20
+    in spamfilter_config.lua removes the body of all spam messages with
+    score greater than 20. The original message is still available with
+    the recover command, if needed;
+o Fixed a problem that occurred when a command-message was sent in HTML
+  format. Because of the Content-Type header in the original message,
+  the answer, in plain text format, was not visible;
+o Fixed a bug in the password parsing. An invalid password was accepted
+  as OK if it started with the valid password as a substring and was the
+  last string in the command.
+o Improvements to the lib
+  - New function added, osbf.config, to allow internal parameter
+    adjustments. This function is more intended for experiments and
+    debugging.
+
+[15/Nov/2005] Version 1.5.1b
+o Improvements and fixes to spamfilter, toer.lua and docs:
+  - All X-OSBF headers were merged into a single one as suggested by Pavel
+    Kolar <kolar@fzu.cz>: Ex: X-OSBF-Lua-Score: 33.63/0.00 [H] (v1.5.1b,
+    Spamfilter v1.1)
+  - White and blacklisted messages are now classified too, so that the
+    score in the header X-OSBF-Lua-Score is the real one, as if they
+    hadn't been listed - suggested by Pavel Kolar. The subject tags for
+    blacklisted and whitelisted messages are the same as configured for
+    spam and ham in the config file, respectively;
+  - The tags in the X-OSBF-Lua-Score header don't follow the subject tags
+    defined in the config file any more. They're now fixed: [B], [S], [s],
+    [h], [H], [W] for blacklisted, spam, spam reinforcement, ham
+    reinforcement, ham and whitelisted, according to the classification;
+  - White and black lists don't use Lua regex by default any more. There's
+    a new option in the config file to turn regex on or off:
+    osbf.cfg_lists_use_regex;
+  - Removed the trailing spaces from the subject tags in the config file.
+    They're now added internally; 
+  - Removed duplicate database info showed by the stats <pwd> command;
+  - The var unlearn_threshold in spamfilter_commands.lua is now an option
+    in the config file, as it should: osbf.cfg_unlearn_threshold;
+  - More consistent thresholds checking in toer.lua;
+  - DSTTT is now the default training method in toer.lua.
+  - Added the script roc.lua, which calculates 1-ROCAC%, a measure of the
+    quality of the classifier.
+
+[06/Nov/2005] Version 1.5b - first public release
+o Re-tuning of internal parameters, after the chain rule fix, resulting
+  in improved accuracy.
+o Docs and example scripts updated.
+
+[30/Sep/2005] Version 1.4b - internal use only
+o Changed seen_features and other flags data struture to a separate array
+  of unsigned chars, in the learn function.
+
+[25/Sep/2005] Version 1.3b - internal use only
+o C and Lua codes updated for lua-5.1-alpha
+o No more captures in string.find
+o Code changed to use new Lua function string.mach
+
+[08/Sep/2005] Version 1.2b - internal use only
+o Fixed an old bug in the chain rule that caused bad accuracy with some
+  corpus. It sometimes would also cause unexpected worse scores after
+  training, as if one had done an "unlearn";
+o Fixed a bug in the "unlearn" code that caused broken chains in the
+  databases;
+o Implemented a new training method acting on both, spam and ham,
+  databases simultaneously, doing a "learn" on the right database and an
+  "unlearn" on the opposite if the score improvement was not enough. Now,
+  both toer.lua and spamfilter.lua use this new method;
+
+[25/Aug/2005] Version 1.1b - internal use only
+o Changed the training method used by the spamfilter. Now the original
+  message is saved under a unique SpamFilter ID (SFID) on the server and
+  the original message is sent to the user with the SFID added as a
+  comment to its "Message-ID" header. The original message is recovered,
+  using the SFID sent back by the user's mail client, in the "In-Reply-To"
+  or "References" header, when he does a "Reply" for training.
+
+[13/May/2005] Version 1.0b18 - internal use only
+[16/Mar/2005] Version 1.0b12 - internal use only
+[28/Jan/2005] Version 1.0b1  - internal use only
+

@@ -1,0 +1,260 @@
+                      --  spamfilter.lua help --
+
+spamfilter.lua is  a mail  filter based on  OSBF-Lua. It  reads messages
+from standard  input and  classifies them  as SPAM  or NONSPAM.  After a
+message is classified, spamfilter.lua prints  it to the standard output,
+with the subject line prefixed with one of the following tags:
+
+"%s" - The message got  a SPAM score  out of the  reinforcement region;
+"%s"  - The message got  a SPAM  score within the  reinforcement region;
+"%s"  - The message got a NONSPAM score within the reinforcement region;
+"%s"     - The message got a NONSPAM score out of the reinforcement region.
+
+The reinforcement region  is the region where the absolute  value of the
+score is  less than the threshold  defined in the config  file. Messages
+with  score  within  the  reinforcement region,  even  though  correctly
+classified, should be trained to keep the accuracy high.
+
+Your reinforcement region is [-%.1f, %.1f]. You can change it by editing
+the value  of cfg.osbf.threshold in spamfilter_config.lua.  You can also
+change the tags and other options in the config file.
+
+spamfilter.lua also adds the following line to the message header:
+
+X-OSBF-Lua-Score: <score>/%.1f [tag] (%s, Spamfilter %s)
+
+The score format  is <score_value>/<reference>. A score  value below the
+<reference> indicates that  the message was classified as  spam; a value
+equal to or greater than the <reference> indicates a nonspam, of course.
+
+The  header  [tag] is  one  of  [B], [S],  [s],  [h],  [H] or  [W],  for
+blacklisted,  spam,  spam  reinforcement,   ham  reinforcement,  ham  or
+whitelisted.
+
+You may send  commands to the spamfilter through a  message to yourself.
+The  following, case  sensitive, commands  are accepted  in the  subject
+line:
+
+- learn <password> spam|nonspam [<sfid> | body]
+	learn the message  replied to as belonging to the  class spam or
+	nonspam, respectively.  This command requires a  "reply". <sfid>
+	and "body" are optional parameters that you can use to inform an
+	alternative place  where to look  for the message. See  the note
+	below for details.
+
+- batch_train <password>
+	execute the commands in the body of the message. The commands
+        are a sequence of lines containing a sfid and the respective
+        command in the following format:
+
+	<sfid>=<command>
+
+	where <command> can be one of
+
+	spam              - train as spam
+	nonspam           - train as nonspam
+	undo              - undo previous training
+	whitelist_from    - add 'From:' to whitelist
+	whitelist_subject - add 'Subject:' to whitelist
+	recover           - recover message from cache
+	remove            - remove message from cache
+
+- train_form <password>
+	execute the script "cache_report.lua", which sends a mail with a
+	training form to the user.
+
+- unlearn <password> spam|nonspam [<sfid> | body]
+	unlearn the message replied to as belonging to the class spam or
+	nonspam, respectively. Used to  undo a mistraining. This command
+	requires a "reply". See the note below for details.
+
+- classify <password> [<sfid> | body]
+	classify the message replied to  and returns the score. Requires
+	a "reply". See the note below for details.
+
+- recover <password> [<sfid>]
+	check if an original copy of the replied to message is available
+	and send it back to you as an attachment, complete with headers.
+	Requires a "reply". See the note below for details.
+
+- whitelist <password> add|del|show <string>
+	add or  delete <string>  to/from the  whitelist. If  <string> is
+	found in  the header, the  message will be accepted.  The "show"
+	command ignores <string>, if any,  and shows the contents of the
+	list.
+
+	Note: white and  black lists don't use regex by  default. If you
+	want     enable     Lua     regex,     change     the     option
+	osbf.cfg_lists_use_regex to "true" in the config file, or add it
+	if it's not present. If you do so, take care of special chars in
+	your strings. You'll have to escape  them with "%%" to get their
+	literal meaning,  also in  your previously defined  strings. The
+	magic chars  to be  protected are  ^$()%%.[]*+-?) Check  the PIL
+	book for more details on pattern-matching functions.
+
+- blacklist <password> add|del|show <string>
+	add or  delete <string>  to/from the  blacklist. If  <string> is
+	found in  the header  the message will  be rejected.  The "show"
+	command ignores <string>, if any,  and shows the contents of the
+	list.
+
+- stats <password>
+	return statistics of the spam and nonspam databases.
+
+- help <password>
+	return this help.
+
+
+OBS: You must do  a "reply" to the message to be  used with the commands
+"learn", "unlearn", "classify" and "recover", changing the "To:" to your
+own address.  The reply is required  because the ID originally  given to
+the message  by the  spamfilter, the  "sfid", is  needed to  recover the
+original message and it is automatically returned in the reply.
+
+If your email client doesn't return it, you can inform the sfid directly
+in the subject as  the last parameter of the command.  In this case, you
+don't have to use a reply, just send the command to your own address.
+
+The sfid can be found in the header of the message as a comment added by
+the spamfilter to  the  Message-ID  field  or to  the  References field,
+depending on the version/configuration, when the message was classified.
+
+The message to  be trained can also be  sent as the body  of the command
+message. In  this case, the  optional parameter  "body" must be  used to
+inform  the filter  to extract  the message  from the  body, instead  of
+looking for a sfid.
+
+Example of sfid in the References :
+
+[... header ...]
+References: <sfid-H20060408-003814-000.00-1@spamfilter.osbf.lua>
+[... header ...]
+
+Example of sfid in the Message-ID :
+
+[... header ...]
+Message-ID: <013e01c5c9f7$d3f60cf0$1216040a@SUPGR11> 
+	(sfid-H20051005-155749-000.00-1@spamfilter.osbf.lua)
+[... header ...]
+
+
+
+Examples of valid commands using the sfid above:
+
+Subject: recover <pwd> sfid-H20051005-155749-+001.00-1@spamfilter.osbf.lua
+Subject: learn <pwd> spam sfid-H20051005-155749-+001.00-1@spamfilter.osbf.lua
+Subject: learn <pwd> spam body
+
+As of version  1.5.7b, the sfid is  added to the References  field, as a
+normal reference, because this form  is accepted by practically all MUA.
+Contrarily to what is recommended  in RFC-2822, some MUAs, like Sylpheed
+and  Mutt,  discard  Message-ID  comments  in  the  reply,  what  breaks
+Spamfilter's training mechanism.
+
+Some  email  clients that support sfid as a Message-ID comment:
+
+- On Unix (tested on Linux):
+  - Evolution
+  - KMail
+  - Mozilla Mail
+  - Mozilla Thunderbird
+  - Mutt (with patch)
+
+- On Windows:
+  - Eudora
+  - Mozilla Mail
+  - Mozilla Thunderbird
+  - Microsoft Outlook 200X
+  - Microsoft Outlook Express
+  - Pegasus Mail
+  - The Bat!
+
+- Webmail:
+  - Openwebmail
+
+If you  know of other  email clients  that support Message  ID comments,
+please send me a note.
+
+************************************************************************
+
+Command line options and commands
+
+Besides the send-to-yourself subject  line commands, spamfilter.lua also
+accepts commands and options in  the command line. The available options
+and commands are described below.
+
+- Options
+
+  --udir=<user_dir> 
+	set  the  user  directory,  where  its  osbf-lua  configuration,
+	databases,  lists and log files  are located.  The  location  of
+	these files can also be set individually, see the options below.
+	Default: current dir
+
+
+  --gdir=<global_dir>
+	set the  global directory where spamfilter.lua  is installed and
+	where    it    looks    for   its    companion    files,    like
+	spamfilter_commands.lua, spamfilter.help, etc.
+	Default: current dir
+
+
+  --cfdir=<config_dir>
+	specify  a location  for the  configuration file  different than
+	that specified with --udir.
+
+
+  --dbdir=<database_dir>
+	specify a  location for the  database files different  than that
+	specified with --udir.
+
+
+  --listdir=<list_dir>
+	specify  a  location  for  the  list  files,  whitelist.lua  and
+	blacklist.lua, different than that specified with --udir.
+
+  --source=stdin|sfid|body
+	set the source of the message to be used in a trainining, when
+	one of the commands --learn or --unlearn is used.
+	- stdin: the message is exactly what is read from stdin
+	- sfid:  the message is recovered from the cache using the sfid
+		 in the headers of the message read from stdin.  
+	- body:  the message to be trained with is the body of the
+		 message read from stdin.
+
+	The default value is "stdin", that is, when this option is not
+	specified.
+
+  --output=report|message
+	determine what is written to stdout after training a message, the
+	default report or the original message classified as spam or ham,
+	according to the training command.
+
+- Commands
+
+  --classify
+	classify  a  message   read  from  stdin  and  print  just  the
+	X-OSBF-Lua-Score header line that would be added to the message
+	header.
+
+  --learn=spam|nonspam
+	learn a message from stdin as spam or not spam, respectively.
+	The source of the message can be changed with the option
+	--source.
+
+  --score
+	classify a message read from stdin and print just the score.
+
+  --unlearn=spam|nonspam
+	undo (approx.) a  previous  learn  done by mistake. The message
+	is read from  stdin. The source of the  message can  be changed
+	with the option --source.
+
+If no command-line command is specified, spamfilter.lua looks for one of
+the send-to-yourself  commands in  the subject line  and executes  it if
+found. If  no subject line command  is found, it searches  the first 100
+chars of the message body for a command. If no command is found, it then
+performs a normal classification, adds a X-OSBF-Lua-Score to the message
+header, does  other actions specified  in the config file,  like tagging
+the subject line, and prints the message to the standard output.
+

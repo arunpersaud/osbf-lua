@@ -1,0 +1,12 @@
+# Example using procmail
+#
+# Add the following lines to your .procmailrc
+
+# Set OSBF_LUA_DIR to where spamfilter.lua is located
+OSBF_LUA_DIR=/usr/local/osbf-lua
+OSBF_LUA_USER_DIR=$HOME/osbf-lua
+
+:0fw: .msgid.lock
+* < 350000 
+| $OSBF_LUA_DIR/spamfilter.lua --udir $OSBF_LUA_USER_DIR
+

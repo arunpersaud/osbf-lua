@@ -1,0 +1,52 @@
+                       History and Agreement
+
+This code originally  started out in May 2004 as  a small mutation
+of crm_markovian.c,  which was copyright W.S.  Yerazunis, with the
+introduction of OSB - Orthogonal  Sparse Bigrams. OSB is a feature
+generation technique developed by  Fidelis Assis as an improvement
+over the token combination method used in the Markovian code. That
+change resulted in crm_osb_bayes.c, the OSB classifier.
+
+The OSB technique was officially announced in the paper "Combining
+Winnow  with  Orthogonal  Sparse   Bigrams  for  Incremental  Spam
+Filtering", a  work headed and  presented by Christian  Siefkes in
+the  8th  European  Conference   on  Principles  and  Practice  of
+Knowledge Discovery in Databases (PKDD), on September 2004.
+
+With the creation  of a new technique for feature  selection - the
+Confidence Factor, aka "Voodoo", by Fidelis Assis in October 2004,
+the  OSBF classifier  was  first developed  in  CRM114 by  Fidelis
+Assis,  combining   OSB  with  the  Confidence   Factor.  The  new
+classifier  was then  dual-licensed to  William S.  Yearazunis and
+Fidelis Assis.
+
+The  Confidence Factor  was later  renamed to  EDDC -  Exponential
+Differential Document  Count, and officially presented  in the MIT
+Spam Conference 2006.
+
+In January  2005, Fidelis Assis  started the OSBF-Lua  project and
+continued  to  improve the  OSBF  code  as  a  module to  the  Lua
+language.  It  has now  mutated  beyond  the  ability of  diff  to
+recognize or  correlate it  (do a  diff to see  how little  of the
+original  structure remains  - the  variables and  their uses  are
+often the same, but almost no lines of code remain intact).
+
+So, rather than argue 'derivative work' and all that, it is agreed
+that: Both Fidelis Assis and William S. Yerazunis have full rights
+to the source code embodying OSB and  OSBF in both OSBF-Lua and in
+CRM114 (that  is, the  OSBF-Lua modules  osbf_bayes.c, osbf_aux.c,
+osbflib.h, and losbflib.c and  the CRM114 modules crm_osb_bayes.c,
+crm_osbf_bayes.c,   crm_osbf_maintenance.c,    crm114_osbf.h   and
+osbf-util.c).
+
+This mutual exchange of full  rights explicitly includes the right
+to relicense the code under any other license, as desired.
+
+It is  also agreed that  primary copyright is assigned  to Fidelis
+Assis for the OSBF-Lua modules  above, and to William S. Yerazunis
+for  the CRM114  modules above;  each grants  the other  secondary
+copyright on the CRM114 and OSBF-Lua modules respectively.
+
+- Fidelis S. G. Assis
+- William S. Yerazunis
+
