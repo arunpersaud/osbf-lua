@@ -8,7 +8,7 @@ PREFIX= /usr/local
 SPAMFILTER_DIR= $(PREFIX)/osbf-lua
 
 # Lua's library dir:
-LUA_LIBDIR= /usr/local/lib/lua/5.1
+LUA_LIBDIR= /usr/lib64/lua/5.2
 # Lua's include dir
 LUA_INCDIR= /usr/local/include
 
