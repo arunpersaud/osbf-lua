@@ -854,9 +854,9 @@ osbf_bayes_classify (const unsigned char *p_text,	/* pointer to text */
 	      if (cfx > 1)
 		cfx = 1;
 	      confidence_factor = cfx *
-		pow ((diff_hits * diff_hits - K1 /
+		pow (((double)diff_hits * diff_hits - K1 /
 		      (class[i_max_p].hits + class[i_min_p].hits)) /
-		     (sum_hits * sum_hits), 2) /
+		     ((double)sum_hits * sum_hits), 2) /
 		(1.0 +
 		 K3 / ((class[i_max_p].hits + class[i_min_p].hits) *
 		       feature_weight[window_idx]));
