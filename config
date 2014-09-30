@@ -43,6 +43,8 @@ PIC=-fPIC
 
 # Compilation directives
 OPTIONS= -O3 -Wall ${PIC} -fomit-frame-pointer -pedantic-errors -W -Waggregate-return -Wcast-align -Wmissing-prototypes -Wnested-externs -Wshadow -Wwrite-strings
+# Disable built-in file locking (useful if you do your own)
+#OPTIONS= $(OPTIONS) -DOSBF_NO_FILE_LOCKING
 INCS= -I$(INC_DIR) -I$(LUA_INCDIR)
 LIBS= -L$(LIB_DIR) -L$(LUA_LIBDIR) -lm
 CFLAGS= $(OPTIONS) $(INCS) -DLIB_VERSION=\"$(LIB_VERSION)\"

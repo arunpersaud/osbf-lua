@@ -10,6 +10,8 @@
  * Copyright 2005, 2006, 2007 Williams Yerazunis, all rights reserved.
  *
  * Read the HISTORY_AND_AGREEMENT for details.
+ * Patched by Kevin Hoffman on Sep 29, 2009 to not use file locking
+ *   if OSBF_NO_FILE_LOCKING is defined (useful if you do your own).
  */
 
 #include <stdio.h>
@@ -737,7 +739,7 @@ osbf_open_class (const char *classname, int flags, CLASS_STRUCT * class,
       class->flags = O_RDWR;
       prot = PROT_READ + PROT_WRITE;
 
-#if (1)
+#if !defined(OSBF_NO_FILE_LOCKING)
       if (osbf_lock_file (class->fd, 0, 0) != 0)
 	{
 	  fprintf (stderr, "Couldn't lock the file %s.", classname);
@@ -824,7 +826,7 @@ osbf_close_class (CLASS_STRUCT * class, char *errmsg)
 	  lseek (class->fd, 0, SEEK_SET);
 	  write (class->fd, &foo, sizeof (foo));
 
-#if (1)
+#if !defined(OSBF_NO_FILE_LOCKING)
 	  if (osbf_unlock_file (class->fd, 0, 0) != 0)
 	    {
 	      snprintf (errmsg, OSBF_ERROR_MESSAGE_LEN,
